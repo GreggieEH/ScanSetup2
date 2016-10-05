@@ -1,0 +1,112 @@
+// MyIDL.idl
+// IDL file for the Simple Com object
+
+#include "dispids.h"
+
+[
+	uuid(721C61DE-E692-45F2-96E2-43BDC870F249),
+	helpstring(""),
+	version(1.0)
+]
+library ScanSetup
+{
+	importlib("stdole32.tlb");
+	[
+		uuid(DE99963D-3650-4F3A-9236-176BAE1FED09),
+		helpstring("Interface")
+	]
+	dispinterface IScanSetup
+	{
+	properties:
+		[id(DISPID_ScanType), bindable, helpstring("Scan type string")]
+		BSTR			ScanType;
+		[id(DISPID_WorkingDirectory), bindable, helpstring("Working directory")]
+		BSTR			WorkingDirectory;
+		[id(DISPID_Comment), bindable, helpstring("Comment string")]
+		BSTR			Comment;
+		[id(DISPID_StartWavelength), helpstring("Start wavelength in nm")]
+		double			StartWavelength;
+		[id(DISPID_EndWavelength), helpstring("End wavelength in nm")]
+		double			EndWavelength;
+		[id(DISPID_StepSize), helpstring("Step size nm")]
+		double			StepSize;
+		[id(DISPID_NumberOfSteps), readonly, helpstring("Number of steps/scan")]
+		long			NumberOfSteps;
+		[id(DISPID_DwellTime), helpstring("Dwell time in ms")]
+		long			DwellTime;
+		[id(DISPID_TransitionDelayMultiplier), helpstring("Transition delay multiplier factor on grating change and filter change")]
+		long			TransitionDelayMultiplier;
+		[id(DISPID_SignalAveraging)]
+		long			SignalAveraging;
+		[id(DISPID_ScanAveraging)]
+		long			ScanAveraging;
+		[id(DISPID_MultipleScans)]
+		long			MultipleScans;
+	methods:
+		[id(DISPID_DoScanSetup), helpstring("Display the scan setup window")]
+		VARIANT_BOOL	DoScanSetup(
+							[in]		long	hwndParent);
+	}
+	[
+		uuid(42234C68-AD7A-491A-ACCB-E6E439D561A3),
+		helpstring(" event interface")
+	]
+	dispinterface _ScanSetup
+	{
+	properties:
+	methods:
+		[id(DISPID_SciScanPropChanged), helpstring("sci scan property change")]
+		void			SciScanPropChanged(
+							[in]		BSTR		propName);
+		[id(DISPID_RequestFriendlyName), helpstring("Request friendly name from a prog ID")]
+		void			RequestFriendlyName(
+							[in]		BSTR		ProgID,
+							[in, out]	BSTR	*	FriendlyName);
+		[id(DISPID_ObjectPropChanged), helpstring("Object property changed")]
+		void			ObjectPropChanged(
+							[in]		BSTR		ObjectName,
+							[in]		BSTR		Property);
+		[id(DISPID_RequestSetupDisplay), helpstring("Request display component setup")]
+		void			RequestSetupDisplay(
+							[in]		BSTR	component);
+		[id(DISPID_RequestReadSignal), helpstring("Request read signal, percent of scale")]
+		void			RequestReadSignal(
+							[out]		double		*	percent,
+							[out]		VARIANT_BOOL*	handled);
+		[id(DISPID_RequestGetWavelength), helpstring("Ask client for wavelength")]
+		void			RequestGetWavelength(
+							[out]		double		*	wavelength,
+							[out]		VARIANT_BOOL*	handled);
+		[id(DISPID_RequestSetWavelength), helpstring("Ask client to set the wavelength")]
+		void			RequestSetWavelength(
+							[in]		double			wavelength,
+							[out]		VARIANT_BOOL*	handled);
+		[id(DISPID_RequestGetAutoTimeConstant), helpstring("Check auto time constant selection")]
+		void			RequestGetAutoTimeConstant(
+							[out]		VARIANT_BOOL*	available,
+							[out]		VARIANT_BOOL*	autoTimeConstant,
+							[out]		VARIANT_BOOL*	handled);
+		[id(DISPID_RequestSetAutoTimeConstant), helpstring("Set the auto time constant")]
+		void			RequestSetAutoTimeConstant(
+							[in]		VARIANT_BOOL	fSet,
+							[out]		VARIANT_BOOL*	handled);
+		[id(DISPID_RequestGetPulsedMode), helpstring("Check pulsed mode selection")]
+		void			RequestGetPulsedMode(
+							[out]		VARIANT_BOOL*	available,
+							[out]		VARIANT_BOOL*	fSet,
+							[out]		VARIANT_BOOL*	handled);
+		[id(DISPID_RequestSetPulsedMode), helpstring("Set pulsed mode")]
+		void			RequestSetPulsedMode(
+							[in]		VARIANT_BOOL	fSet,
+							[out]		VARIANT_BOOL*	handled);
+	}
+	[
+		uuid(14D4697D-30DF-49CD-B32C-0460DFA0EAFE),
+		helpstring("class")
+	]
+	coclass ScanSetup
+	{
+		[default]				dispinterface			IScanSetup;
+		[default, source]		dispinterface			_ScanSetup;
+	}
+}
